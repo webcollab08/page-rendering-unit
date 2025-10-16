@@ -1,0 +1,172 @@
+package com.tiucd.portfolio.pagerendering.repository;
+
+import com.tiucd.portfolio.pagerendering.model.entity.BrandingConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Branding Configuration Repository
+ * JDBC-based repository for branding configuration operations
+ * 
+ * PRODUCTION MIGRATION NOTES:
+ * - Implement caching for branding configurations (Redis/Hazelcast)
+ * - Add versioning support for branding changes
+ * - Consider CDN integration for logo and asset URLs
+ */
+@Repository
+public class BrandingConfigRepository {
+    
+    private final JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    public BrandingConfigRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+    
+    /**
+     * Find current active branding configuration
+     * PRODUCTION MIGRATION: Cache this result as it's frequently accessed
+     */
+    public Optional<BrandingConfig> findCurrentConfig() {
+        String sql = "SELECT * FROM branding_config WHERE is_active = true ORDER BY created_date DESC LIMIT 1";
+        
+        try {
+            BrandingConfig config = jdbcTemplate.queryForObject(sql, new BrandingConfigRowMapper());
+            return Optional.ofNullable(config);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    
+    /**
+     * Find branding configuration by name
+     */
+    public Optional<BrandingConfig> findByConfigName(String configName) {
+        String sql = "SELECT * FROM branding_config WHERE config_name = ?";
+        
+        try {
+            BrandingConfig config = jdbcTemplate.queryForObject(sql, new BrandingConfigRowMapper(), configName);
+            return Optional.ofNullable(config);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    
+    /**
+     * Find branding configuration by theme
+     */
+    public List<BrandingConfig> findByTheme(String theme) {
+        String sql = "SELECT * FROM branding_config WHERE theme_name = ? AND is_active = true";
+        return jdbcTemplate.query(sql, new BrandingConfigRowMapper(), theme);
+    }
+    
+    /**
+     * Find all active branding configurations
+     */
+    public List<BrandingConfig> findAllActive() {
+        String sql = "SELECT * FROM branding_config WHERE is_active = true ORDER BY config_name";
+        return jdbcTemplate.query(sql, new BrandingConfigRowMapper());
+    }
+    
+    /**
+     * Save branding configuration
+     */
+    public BrandingConfig save(BrandingConfig config) {
+        if (config.getId() == null) {
+            return insert(config);
+        } else {
+            return update(config);
+        }
+    }
+    
+    /**
+     * Insert new branding configuration
+     */
+    private BrandingConfig insert(BrandingConfig config) {
+        String sql = "INSERT INTO branding_config (config_name, logo_url, primary_color, " +
+                    "secondary_color, font_family, theme_name, css_overrides, is_active, created_date) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        config.setCreatedDate(LocalDateTime.now());
+        
+        jdbcTemplate.update(sql,
+            config.getConfigName(),
+            config.getLogoUrl(),
+            config.getPrimaryColor(),
+            config.getSecondaryColor(),
+            config.getFontFamily(),
+            config.getThemeName(),
+            config.getCssOverrides(),
+            config.getIsActive(),
+            config.getCreatedDate()
+        );
+        
+        return findByConfigName(config.getConfigName()).orElse(config);
+    }
+    
+    /**
+     * Update existing branding configuration
+     */
+    private BrandingConfig update(BrandingConfig config) {
+        String sql = "UPDATE branding_config SET logo_url = ?, primary_color = ?, " +
+                    "secondary_color = ?, font_family = ?, theme_name = ?, css_overrides = ?, " +
+                    "is_active = ? WHERE id = ?";
+        
+        jdbcTemplate.update(sql,
+            config.getLogoUrl(),
+            config.getPrimaryColor(),
+            config.getSecondaryColor(),
+            config.getFontFamily(),
+            config.getThemeName(),
+            config.getCssOverrides(),
+            config.getIsActive(),
+            config.getId()
+        );
+        
+        return config;
+    }
+    
+    /**
+     * Activate branding configuration and deactivate others
+     * PRODUCTION MIGRATION: Use database transactions for consistency
+     */
+    public void activateConfig(String configName) {
+        // Deactivate all configurations
+        String deactivateAllSql = "UPDATE branding_config SET is_active = false";
+        jdbcTemplate.update(deactivateAllSql);
+        
+        // Activate the specified configuration
+        String activateSql = "UPDATE branding_config SET is_active = true WHERE config_name = ?";
+        jdbcTemplate.update(activateSql, configName);
+    }
+    
+    /**
+     * Row mapper for BrandingConfig entity
+     */
+    private static class BrandingConfigRowMapper implements RowMapper<BrandingConfig> {
+        @Override
+        public BrandingConfig mapRow(ResultSet rs, int rowNum) throws SQLException {
+            BrandingConfig config = new BrandingConfig();
+            config.setId(rs.getLong("id"));
+            config.setConfigName(rs.getString("config_name"));
+            config.setLogoUrl(rs.getString("logo_url"));
+            config.setPrimaryColor(rs.getString("primary_color"));
+            config.setSecondaryColor(rs.getString("secondary_color"));
+            config.setFontFamily(rs.getString("font_family"));
+            config.setThemeName(rs.getString("theme_name"));
+            config.setCssOverrides(rs.getString("css_overrides"));
+            config.setIsActive(rs.getBoolean("is_active"));
+            config.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+            
+            return config;
+        }
+    }
+}

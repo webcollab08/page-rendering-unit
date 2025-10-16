@@ -1,0 +1,158 @@
+package com.tiucd.portfolio.pagerendering.repository;
+
+import com.tiucd.portfolio.pagerendering.model.entity.PageMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Page Metadata Repository
+ * JDBC-based repository for page metadata operations
+ * 
+ * PRODUCTION MIGRATION NOTES:
+ * - Consider using JPA/Hibernate for complex queries in production
+ * - Add connection pooling configuration for production databases
+ * - Implement query optimization and indexing strategies
+ * - Add transaction management for data consistency
+ * - Consider using database-specific features (Oracle hints, PostgreSQL extensions)
+ */
+@Repository
+public class PageMetadataRepository {
+    
+    private final JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    public PageMetadataRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+    
+    /**
+     * Find page metadata by page ID
+     * PRODUCTION MIGRATION: Add caching for frequently accessed pages
+     */
+    public Optional<PageMetadata> findByPageId(String pageId) {
+        String sql = "SELECT * FROM page_metadata WHERE page_id = ? AND is_active = true";
+        
+        try {
+            PageMetadata metadata = jdbcTemplate.queryForObject(sql, new PageMetadataRowMapper(), pageId);
+            return Optional.ofNullable(metadata);
+        } catch (Exception e) {
+            // PRODUCTION MIGRATION: Implement proper logging and error handling
+            return Optional.empty();
+        }
+    }
+    
+    /**
+     * Find all active page metadata
+     * PRODUCTION MIGRATION: Add pagination for large datasets
+     */
+    public List<PageMetadata> findAllActive() {
+        String sql = "SELECT * FROM page_metadata WHERE is_active = true ORDER BY created_date DESC";
+        return jdbcTemplate.query(sql, new PageMetadataRowMapper());
+    }
+    
+    /**
+     * Save page metadata
+     * PRODUCTION MIGRATION: Add validation and audit trail
+     */
+    public PageMetadata save(PageMetadata metadata) {
+        if (metadata.getId() == null) {
+            return insert(metadata);
+        } else {
+            return update(metadata);
+        }
+    }
+    
+    /**
+     * Insert new page metadata
+     */
+    private PageMetadata insert(PageMetadata metadata) {
+        String sql = "INSERT INTO page_metadata (page_id, title, description, keywords, author, " +
+                    "created_date, updated_date, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        LocalDateTime now = LocalDateTime.now();
+        metadata.setCreatedDate(now);
+        metadata.setUpdatedDate(now);
+        
+        jdbcTemplate.update(sql, 
+            metadata.getPageId(),
+            metadata.getTitle(),
+            metadata.getDescription(),
+            metadata.getKeywords(),
+            metadata.getAuthor(),
+            metadata.getCreatedDate(),
+            metadata.getUpdatedDate(),
+            metadata.getIsActive()
+        );
+        
+        // PRODUCTION MIGRATION: Use database-specific methods to get generated ID
+        // Oracle: Use RETURNING clause or sequence
+        // PostgreSQL: Use RETURNING clause
+        // MySQL: Use LAST_INSERT_ID()
+        
+        return findByPageId(metadata.getPageId()).orElse(metadata);
+    }
+    
+    /**
+     * Update existing page metadata
+     */
+    private PageMetadata update(PageMetadata metadata) {
+        String sql = "UPDATE page_metadata SET title = ?, description = ?, keywords = ?, " +
+                    "author = ?, updated_date = ? WHERE id = ?";
+        
+        metadata.setUpdatedDate(LocalDateTime.now());
+        
+        jdbcTemplate.update(sql,
+            metadata.getTitle(),
+            metadata.getDescription(),
+            metadata.getKeywords(),
+            metadata.getAuthor(),
+            metadata.getUpdatedDate(),
+            metadata.getId()
+        );
+        
+        return metadata;
+    }
+    
+    /**
+     * Delete page metadata (soft delete)
+     * PRODUCTION MIGRATION: Implement hard delete option for data cleanup
+     */
+    public void deleteByPageId(String pageId) {
+        String sql = "UPDATE page_metadata SET is_active = false, updated_date = ? WHERE page_id = ?";
+        jdbcTemplate.update(sql, LocalDateTime.now(), pageId);
+    }
+    
+    /**
+     * Row mapper for PageMetadata entity
+     * PRODUCTION MIGRATION: Consider using BeanPropertyRowMapper for simpler mapping
+     */
+    private static class PageMetadataRowMapper implements RowMapper<PageMetadata> {
+        @Override
+        public PageMetadata mapRow(ResultSet rs, int rowNum) throws SQLException {
+            PageMetadata metadata = new PageMetadata();
+            metadata.setId(rs.getLong("id"));
+            metadata.setPageId(rs.getString("page_id"));
+            metadata.setTitle(rs.getString("title"));
+            metadata.setDescription(rs.getString("description"));
+            metadata.setKeywords(rs.getString("keywords"));
+            metadata.setAuthor(rs.getString("author"));
+            
+            // PRODUCTION MIGRATION: Handle different timestamp formats for different databases
+            // Oracle: Use rs.getTimestamp() and convert to LocalDateTime
+            // PostgreSQL/MySQL: Direct LocalDateTime mapping usually works
+            metadata.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+            metadata.setUpdatedDate(rs.getTimestamp("updated_date").toLocalDateTime());
+            metadata.setIsActive(rs.getBoolean("is_active"));
+            
+            return metadata;
+        }
+    }
+}
