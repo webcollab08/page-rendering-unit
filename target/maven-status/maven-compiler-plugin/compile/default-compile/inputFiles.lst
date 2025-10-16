@@ -1,0 +1,12 @@
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/service/PageRenderingService.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/service/BrandingService.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/PageRenderingApplication.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/repository/MockBrandingConfigRepository.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/service/MockPerformanceOptimizationService.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/repository/MockPageMetadataRepository.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/controller/DashboardController.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/model/dto/PageRenderResponse.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/controller/PageRenderingController.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/controller/RootController.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/model/entity/BrandingConfig.java
+/Users/gracey/Work/Amazon/aws/construction/page_rendering_unit/src/main/java/com/tiucd/portfolio/pagerendering/model/entity/PageMetadata.java

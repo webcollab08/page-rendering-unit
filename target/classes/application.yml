@@ -1,0 +1,93 @@
+# Spring Boot Application Configuration
+# PRODUCTION MIGRATION: Update database configurations for Oracle/PostgreSQL/MySQL
+
+spring:
+  application:
+    name: page-rendering-unit
+  
+  # Disable database auto-configuration for demo
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration 
+    
+    # PRODUCTION MIGRATION EXAMPLES:
+    # Oracle Configuration:
+    # url: jdbc:oracle:thin:@//localhost:1521/AWSDB
+    # driver-class-name: oracle.jdbc.OracleDriver
+    # username: ${DB_USERNAME:page_user}
+    # password: ${DB_PASSWORD:secure_password}
+    
+    # PostgreSQL Configuration:
+    # url: jdbc:postgresql://localhost:5432/awsdb
+    # driver-class-name: org.postgresql.Driver
+    # username: ${DB_USERNAME:page_user}
+    # password: ${DB_PASSWORD:secure_password}
+    
+    # MySQL Configuration:
+    # url: jdbc:mysql://localhost:3306/awsdb
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+    # username: ${DB_USERNAME:page_user}
+    # password: ${DB_PASSWORD:secure_password}
+
+  # H2 Console Configuration (Development Only)
+  # PRODUCTION MIGRATION: Remove h2 console configuration in production
+  h2:
+    console:
+      enabled: false
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
+  # SQL Initialization
+  # PRODUCTION MIGRATION: Update schema and data files for production database
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      # PRODUCTION MIGRATION: Set mode to 'never' in production and use Flyway/Liquibase
+
+  # Thymeleaf Configuration
+  thymeleaf:
+    cache: false # Development setting
+    # PRODUCTION MIGRATION: Set cache to true in production for performance
+
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /page-rendering
+
+# Logging Configuration
+# PRODUCTION MIGRATION: Adjust log levels and appenders for production
+logging:
+  level:
+    com.tiucd.portfolio.pagerendering: DEBUG
+    org.springframework.jdbc: DEBUG # Development setting
+    # PRODUCTION MIGRATION: Set to INFO or WARN in production
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Management and Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+        # PRODUCTION MIGRATION: Limit exposed endpoints in production
+  endpoint:
+    health:
+      show-details: always
+
+# Custom Application Properties
+page-rendering:
+  branding:
+    company-name: "TIUCD Portfolio"
+    theme: "modern"
+  performance:
+    cache-ttl: 300 # 5 minutes
+    # PRODUCTION MIGRATION: Adjust cache settings based on production requirements
+  responsive:
+    mobile-breakpoint: 768
+    tablet-breakpoint: 1024

@@ -1,0 +1,14 @@
+com/tiucd/portfolio/pagerendering/controller/RootController.class
+com/tiucd/portfolio/pagerendering/service/BrandingService.class
+com/tiucd/portfolio/pagerendering/model/dto/PageRenderResponse.class
+com/tiucd/portfolio/pagerendering/model/entity/BrandingConfig.class
+com/tiucd/portfolio/pagerendering/PageRenderingApplication.class
+com/tiucd/portfolio/pagerendering/controller/DashboardController.class
+com/tiucd/portfolio/pagerendering/repository/MockBrandingConfigRepository.class
+com/tiucd/portfolio/pagerendering/service/MockPerformanceOptimizationService.class
+com/tiucd/portfolio/pagerendering/model/entity/PageMetadata.class
+com/tiucd/portfolio/pagerendering/repository/MockPageMetadataRepository.class
+com/tiucd/portfolio/pagerendering/controller/PageRenderingController.class
+com/tiucd/portfolio/pagerendering/model/dto/PageRenderResponse$PerformanceInfo.class
+com/tiucd/portfolio/pagerendering/service/PageRenderingService.class
+com/tiucd/portfolio/pagerendering/model/dto/PageRenderResponse$BrandingInfo.class

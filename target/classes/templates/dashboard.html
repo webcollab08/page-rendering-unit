@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Rendering Dashboard</title>
+    <link href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .dashboard-header {
+            background: linear-gradient(135deg, #007bff 0%, #6c757d 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        .branding-card {
+            border-left: 4px solid #007bff;
+            transition: transform 0.2s;
+        }
+        .branding-card:hover {
+            transform: translateX(5px);
+        }
+        .active-config {
+            border-left-color: #28a745;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="container">
+            <h1>Page Rendering Dashboard</h1>
+            <p class="lead">Manage branding configurations and monitor performance</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Current Branding -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Current Active Branding</h3>
+                    </div>
+                    <div class="card-body" th:if="${currentBranding}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Configuration:</strong> <span th:text="${currentBranding.configName}">Default</span></p>
+                                <p><strong>Theme:</strong> <span th:text="${currentBranding.themeName}">Modern</span></p>
+                                <p><strong>Primary Color:</strong> 
+                                    <span th:text="${currentBranding.primaryColor}" 
+                                          th:style="'color: ' + ${currentBranding.primaryColor} + '; font-weight: bold;'">#007bff</span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Font Family:</strong> <span th:text="${currentBranding.fontFamily}">Arial</span></p>
+                                <p><strong>Logo URL:</strong> <span th:text="${currentBranding.logoUrl}">N/A</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Branding Configurations -->
+        <div class="row">
+            <div class="col-12">
+                <h3>Available Branding Configurations</h3>
+                <div class="row">
+                    <div class="col-md-4 mb-3" th:each="config : ${brandingConfigs}">
+                        <div class="card branding-card h-100" 
+                             th:classappend="${config.isActive} ? 'active-config' : ''">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${config.configName}">Config Name</h5>
+                                <p class="card-text">
+                                    <small class="text-muted">Theme: <span th:text="${config.themeName}">Theme</span></small>
+                                </p>
+                                <div class="mb-2">
+                                    <span class="badge" 
+                                          th:style="'background-color: ' + ${config.primaryColor}"
+                                          th:text="${config.primaryColor}">Color</span>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-sm" 
+                                            th:data-config-name="${config.configName}"
+                                            onclick="activateBranding(this.getAttribute('data-config-name'))">
+                                        Activate
+                                    </button>
+                                    <a th:href="@{'/api/page/view/landing-home'}" 
+                                       class="btn btn-outline-secondary btn-sm">
+                                        Preview
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a href="/api/page/view/landing-home" class="btn btn-success w-100">
+                                    View Landing Page
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/api/page/analytics/landing-home" class="btn btn-info w-100">
+                                    View Analytics
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/h2-console" class="btn btn-warning w-100" target="_blank">
+                                    Database Console
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-secondary w-100" onclick="location.reload()">
+                                    Refresh Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function activateBranding(configName) {
+            if (confirm('Activate branding configuration: ' + configName + '?')) {
+                fetch('/api/page/branding/activate/' + configName, {
+                    method: 'POST'
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    location.reload();
+                })
+                .catch(error => {
+                    alert('Error activating branding: ' + error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

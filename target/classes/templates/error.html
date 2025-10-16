@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Page Rendering Unit</title>
+    <link th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #dc3545 0%, #6c757d 100%);
+        }
+        .error-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            text-align: center;
+            max-width: 500px;
+        }
+        .error-icon {
+            font-size: 4rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-card">
+            <div class="error-icon">⚠️</div>
+            <h1 class="h2 mb-3">Oops! Something went wrong</h1>
+            <p class="text-muted mb-4" th:text="${error}">An unexpected error occurred while processing your request.</p>
+            
+            <div class="d-grid gap-2">
+                <a th:href="@{/api/page/view/landing-home}" class="btn btn-primary">
+                    Go to Home Page
+                </a>
+                <a th:href="@{/api/page/dashboard}" class="btn btn-outline-secondary">
+                    Go to Dashboard
+                </a>
+                <button class="btn btn-outline-info" onclick="history.back()">
+                    Go Back
+                </button>
+            </div>
+            
+            <hr class="my-4">
+            <small class="text-muted">
+                If this problem persists, please contact the system administrator.
+            </small>
+        </div>
+    </div>
+
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
