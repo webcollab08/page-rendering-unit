@@ -1,27 +1,45 @@
 package com.tiucd.portfolio.pagerendering.model.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * Branding Configuration Entity
  * Represents branding and theme configuration for page rendering
- * 
- * PRODUCTION MIGRATION NOTES:
- * - Add validation for color codes (hex format)
- * - Consider caching branding configurations for performance
- * - Implement versioning for branding changes in production
  */
+@Entity
+@Table(name = "branding_config")
 public class BrandingConfig {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "config_name", unique = true, nullable = false)
     private String configName;
+    
+    @Column(name = "logo_url")
     private String logoUrl;
+    
+    @Column(name = "primary_color")
     private String primaryColor;
+    
+    @Column(name = "secondary_color")
     private String secondaryColor;
+    
+    @Column(name = "font_family")
     private String fontFamily;
+    
+    @Column(name = "theme_name")
     private String themeName;
+    
+    @Column(name = "css_overrides")
     private String cssOverrides;
+    
+    @Column(name = "is_active")
     private Boolean isActive;
+    
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
     
     // Default constructor

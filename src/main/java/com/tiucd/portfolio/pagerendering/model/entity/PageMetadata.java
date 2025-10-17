@@ -1,26 +1,42 @@
 package com.tiucd.portfolio.pagerendering.model.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * Page Metadata Entity
  * Represents page metadata information for SEO and page configuration
- * 
- * PRODUCTION MIGRATION NOTES:
- * - Consider adding JPA annotations for ORM mapping in production
- * - Add validation annotations for data integrity
- * - Implement audit fields (created_by, updated_by) for production
  */
+@Entity
+@Table(name = "page_metadata")
 public class PageMetadata {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "page_id", unique = true, nullable = false)
     private String pageId;
+    
+    @Column(name = "title", nullable = false)
     private String title;
+    
+    @Column(name = "description")
     private String description;
+    
+    @Column(name = "keywords")
     private String keywords;
+    
+    @Column(name = "author")
     private String author;
+    
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
+    
+    @Column(name = "updated_date")
     private LocalDateTime updatedDate;
+    
+    @Column(name = "is_active")
     private Boolean isActive;
     
     // Default constructor
