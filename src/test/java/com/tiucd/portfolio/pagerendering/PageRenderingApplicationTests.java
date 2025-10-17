@@ -4,12 +4,21 @@ import com.tiucd.portfolio.pagerendering.service.PageRenderingService;
 import com.tiucd.portfolio.pagerendering.service.BrandingService;
 import com.tiucd.portfolio.pagerendering.model.dto.PageRenderResponse;
 import com.tiucd.portfolio.pagerendering.model.entity.BrandingConfig;
+import com.tiucd.portfolio.pagerendering.model.entity.PageMetadata;
+import com.tiucd.portfolio.pagerendering.repository.PageMetadataRepository;
+import com.tiucd.portfolio.pagerendering.repository.BrandingConfigRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.mockito.Mockito;
 
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Integration Tests for Page Rendering Application
@@ -22,18 +31,43 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Add database migration testing
  */
 @SpringBootTest
-@ActiveProfiles("test") // PRODUCTION MIGRATION: Use separate test profile
+@ActiveProfiles("test")
 class PageRenderingApplicationTests {
 
+    @MockBean
+    private PageMetadataRepository pageMetadataRepository;
+    
+    @MockBean
+    private BrandingConfigRepository brandingConfigRepository;
+    
     @Autowired
     private PageRenderingService pageRenderingService;
     
     @Autowired
     private BrandingService brandingService;
 
-    /**
-     * Test application context loads successfully
-     */
+    @BeforeEach
+    void setUp() {
+        // Mock page metadata
+        PageMetadata mockPage = new PageMetadata();
+        mockPage.setPageId("landing-home");
+        mockPage.setTitle("Home Page");
+        mockPage.setDescription("Welcome to our homepage");
+        mockPage.setIsActive(true);
+        
+        when(pageMetadataRepository.findByPageId("landing-home"))
+            .thenReturn(Optional.of(mockPage));
+        
+        // Mock branding config
+        BrandingConfig mockBranding = new BrandingConfig();
+        mockBranding.setConfigName("test-config");
+        mockBranding.setPrimaryColor("#007bff");
+        mockBranding.setThemeName("test");
+        
+        when(brandingConfigRepository.findCurrentConfig())
+            .thenReturn(Optional.of(mockBranding));
+    }
+
     @Test
     void contextLoads() {
         assertNotNull(pageRenderingService);
