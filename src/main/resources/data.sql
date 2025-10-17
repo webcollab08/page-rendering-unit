@@ -3,7 +3,7 @@
 
 -- Sample Page Metadata
 INSERT INTO page_metadata (page_id, title, description, keywords, author, is_active) VALUES
-('landing-home', 'TIUCD Portfolio - Home', 'Welcome to TIUCD Portfolio showcasing innovative solutions', 'portfolio, technology, innovation, solutions', 'TIUCD Team', true),
+('landing-home', 'Testing Portfolio', 'Welcome to TIUCD Portfolio showcasing innovative solutions', 'portfolio, technology, innovation, solutions', 'TIUCD Team', true),
 ('about-us', 'About Us - TIUCD Portfolio', 'Learn about our company mission and values', 'about, company, mission, values, team', 'TIUCD Team', true),
 ('services', 'Our Services - TIUCD Portfolio', 'Comprehensive technology services and solutions', 'services, technology, consulting, development', 'TIUCD Team', true),
 ('contact', 'Contact Us - TIUCD Portfolio', 'Get in touch with our expert team', 'contact, support, consultation, inquiry', 'TIUCD Team', true);
