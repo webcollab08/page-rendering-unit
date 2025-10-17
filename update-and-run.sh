@@ -1,12 +1,12 @@
 #!/bin/bash
-# Stop running containers
-docker stop $(docker ps -q) 2>/dev/null
+# Stop and remove page-rendering-unit container
+docker stop page-rendering-unit 2>/dev/null
+docker rm page-rendering-unit 2>/dev/null
 
-# Remove old images
-docker rmi $(docker images webc0llab/page-rendering-unit -q) --force 2>/dev/null
-
-# Pull latest
+# Pull latest image
 docker pull webc0llab/page-rendering-unit:latest
 
-# Run new container
-docker run -p 8080:8080 webc0llab/page-rendering-unit:latest
+# Start containers using docker-compose
+docker compose up -d
+
+echo "Application started at http://localhost:8080/page-rendering"
