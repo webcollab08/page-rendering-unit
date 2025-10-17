@@ -41,10 +41,11 @@ spring:
         hbm2ddl:
           halt_on_error: false
 
-  # SQL Initialization - Disabled (using existing Oracle data)
+  # SQL Initialization - Disabled (using JPA DDL)
   sql:
     init:
       mode: never
+      schema-locations:
 
   # Thymeleaf Configuration
   thymeleaf:
