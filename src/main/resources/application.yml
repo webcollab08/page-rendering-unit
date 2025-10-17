@@ -7,7 +7,7 @@ spring:
   
   # Oracle Database Configuration
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:ORCLPDB1
+    url: jdbc:oracle:thin:@localhost:1521:XE
     driver-class-name: oracle.jdbc.OracleDriver
     username: system
     password: oracle123 
@@ -37,14 +37,10 @@ spring:
     hibernate:
       ddl-auto: update
 
-  # SQL Initialization
-  # PRODUCTION MIGRATION: Update schema and data files for production database
+  # SQL Initialization - Disabled (using existing Oracle data)
   sql:
     init:
-      mode: always
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
-      # PRODUCTION MIGRATION: Set mode to 'never' in production and use Flyway/Liquibase
+      mode: never
 
   # Thymeleaf Configuration
   thymeleaf:
