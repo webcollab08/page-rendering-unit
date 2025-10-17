@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   page-rendering-app:
-    build: .
+    image: webc0llab/page-rendering-unit:latest
+    pull_policy: always
     ports:
       - "8080:8080"
     environment:
