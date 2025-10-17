@@ -9,14 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      oracle:
-        image: gvenzl/oracle-xe:21-slim
-        env:
-          ORACLE_PASSWORD: oracle123
-        ports:
-          - 1521:1521
-        options: --health-cmd="sqlplus -s system/oracle123@XE <<<'SELECT 1 FROM dual;'" --health-interval=30s --health-timeout=10s --health-retries=5
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -24,14 +16,8 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Wait for Oracle
-      run: |
-        timeout 300 bash -c 'until docker exec $(docker ps -q --filter ancestor=gvenzl/oracle-xe:21-slim) sqlplus -s system/oracle123@XE <<<"SELECT 1 FROM dual;"; do sleep 5; done'
-
     - name: Run tests
-      run: mvn clean test -Dspring.profiles.active=test
-      env:
-        SPRING_DATASOURCE_URL: jdbc:oracle:thin:@localhost:1521:XE
+      run: mvn clean test
 
   build-and-deploy:
     needs: test
