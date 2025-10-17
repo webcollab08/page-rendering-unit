@@ -33,9 +33,13 @@ spring:
 
   # JPA Configuration
   jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
+    database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        hbm2ddl:
+          halt_on_error: false
 
   # SQL Initialization - Disabled (using existing Oracle data)
   sql:

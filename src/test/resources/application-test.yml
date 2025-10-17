@@ -5,9 +5,14 @@ spring:
     username: system
     password: oracle123
   jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
+    database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
+    properties:
+      hibernate:
+        hbm2ddl:
+          halt_on_error: false
   sql:
     init:
-      mode: never
+      mode: always
+      data-locations: classpath:data.sql
