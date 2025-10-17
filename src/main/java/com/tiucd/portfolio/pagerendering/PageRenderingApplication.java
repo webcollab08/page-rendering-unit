@@ -3,7 +3,6 @@ package com.tiucd.portfolio.pagerendering;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Page Rendering Unit - Spring Boot Application
@@ -17,7 +16,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * - Add distributed tracing with Zipkin/Jaeger
  */
 @SpringBootApplication
-@EnableJpaRepositories
 @EnableJpaRepositories
 public class PageRenderingApplication {
 
