@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface BrandingConfigRepository extends JpaRepository<BrandingConfig, Long> {
     
-    @Query("SELECT b FROM BrandingConfig b WHERE b.isActive = 1")
+    @Query("SELECT b FROM BrandingConfig b WHERE b.isActive = true")
     Optional<BrandingConfig> findCurrentConfig();
     
     Optional<BrandingConfig> findByConfigName(String configName);

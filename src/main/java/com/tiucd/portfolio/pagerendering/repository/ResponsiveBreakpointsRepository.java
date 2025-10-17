@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ResponsiveBreakpointsRepository extends JpaRepository<ResponsiveBreakpoints, Long> {
     
-    @Query("SELECT r FROM ResponsiveBreakpoints r WHERE r.isActive = 1")
+    @Query("SELECT r FROM ResponsiveBreakpoints r WHERE r.isActive = true")
     List<ResponsiveBreakpoints> findAllActive();
     
     Optional<ResponsiveBreakpoints> findByDeviceType(String deviceType);

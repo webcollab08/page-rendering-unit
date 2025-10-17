@@ -13,6 +13,6 @@ public interface PageMetadataRepository extends JpaRepository<PageMetadata, Long
     
     Optional<PageMetadata> findByPageId(String pageId);
     
-    @Query("SELECT p FROM PageMetadata p WHERE p.isActive = 1")
+    @Query("SELECT p FROM PageMetadata p WHERE p.isActive = true")
     List<PageMetadata> findAllActive();
 }
