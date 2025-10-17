@@ -3,8 +3,8 @@ package com.tiucd.portfolio.pagerendering.service;
 import com.tiucd.portfolio.pagerendering.model.dto.PageRenderResponse;
 import com.tiucd.portfolio.pagerendering.model.entity.BrandingConfig;
 import com.tiucd.portfolio.pagerendering.model.entity.PageMetadata;
-import com.tiucd.portfolio.pagerendering.repository.MockBrandingConfigRepository;
-import com.tiucd.portfolio.pagerendering.repository.MockPageMetadataRepository;
+import com.tiucd.portfolio.pagerendering.repository.BrandingConfigRepository;
+import com.tiucd.portfolio.pagerendering.repository.PageMetadataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +23,13 @@ import java.util.Optional;
 @Service
 public class PageRenderingService {
     
-    private final MockPageMetadataRepository pageMetadataRepository;
-    private final MockBrandingConfigRepository brandingConfigRepository;
+    private final PageMetadataRepository pageMetadataRepository;
+    private final BrandingConfigRepository brandingConfigRepository;
     private final MockPerformanceOptimizationService performanceService;
     
     @Autowired
-    public PageRenderingService(MockPageMetadataRepository pageMetadataRepository,
-                               MockBrandingConfigRepository brandingConfigRepository,
+    public PageRenderingService(PageMetadataRepository pageMetadataRepository,
+                               BrandingConfigRepository brandingConfigRepository,
                                MockPerformanceOptimizationService performanceService) {
         this.pageMetadataRepository = pageMetadataRepository;
         this.brandingConfigRepository = brandingConfigRepository;
