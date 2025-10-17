@@ -2,6 +2,8 @@ package com.tiucd.portfolio.pagerendering;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Page Rendering Unit - Spring Boot Application
@@ -14,10 +16,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * - Implement health checks and readiness probes for Kubernetes
  * - Add distributed tracing with Zipkin/Jaeger
  */
-@SpringBootApplication(exclude = {
-    org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class,
-    org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration.class
-})
+@SpringBootApplication
+@EnableJpaRepositories
+@EnableJpaRepositories
 public class PageRenderingApplication {
 
     public static void main(String[] args) {
