@@ -5,11 +5,12 @@ spring:
   application:
     name: page-rendering-unit
   
-  # Disable database auto-configuration for demo
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration 
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
     
     # PRODUCTION MIGRATION EXAMPLES:
     # Oracle Configuration:
@@ -38,6 +39,12 @@ spring:
       path: /h2-console
       settings:
         web-allow-others: true
+  
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
 
   # SQL Initialization
   # PRODUCTION MIGRATION: Update schema and data files for production database
