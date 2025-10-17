@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Oracle Database for testing
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    environment:
+      ORACLE_PASSWORD: oracle123
+    ports:
+      - "1521:1521"
+    healthcheck:
+      test: ["CMD", "sqlplus", "-L", "system/oracle123@//localhost:1521/XE", "@/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # CI Pipeline Runner
+  ci-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.ci
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    environment:
+      - ORACLE_URL=jdbc:oracle:thin:@oracle-db:1521:XE
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: |
+      sh -c "
+        echo 'Starting CI Pipeline...'
+        mvn clean compile
+        mvn test
+        mvn package
+        echo 'CI Pipeline completed successfully!'
+      "

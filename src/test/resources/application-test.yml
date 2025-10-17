@@ -5,9 +5,8 @@ spring:
     username: system
     password: oracle123
   jpa:
-    database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-only
     properties:
       hibernate:
         hbm2ddl:
@@ -16,5 +15,4 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: 
       data-locations: classpath:data.sql
